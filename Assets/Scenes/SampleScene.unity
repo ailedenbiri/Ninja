@@ -509,10 +509,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  rotationSpeed: 5
-  jumpForce: 5
-  dashDistance: 10
-  dashCooldown: 1
+  dashSpeed: 20
+  dashDuration: 0.2
+  dashCooldown: 0
 --- !u!23 &1132037611
 MeshRenderer:
   m_ObjectHideFlags: 0
