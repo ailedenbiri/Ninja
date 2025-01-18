@@ -1,16 +1,20 @@
 using System.Collections;
+using UnityEditor.Media;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f; // Normal hareket h�z�
-    public float dashSpeed = 20f; // Dash s�ras�nda uygulanacak h�z
-    public float dashDuration = 0.2f; // Dash s�resi
-    public float dashCooldown = 1f; // Dash i�in bekleme s�resi
+    [Header("Move")]
+    [SerializeField] private float moveSpeed = 5f; 
 
-    private float dashTime; // Dash s�resi takibi
+    [Header("Dash")]
+    [SerializeField] private float dashSpeed = 20f; 
+    [SerializeField] private float dashDuration = 0.2f; 
+    [SerializeField] private float dashCooldown = 1f; 
+
+    private float dashTime; 
     private bool isDashing = false;
-    private float dashCooldownTimer; // Dash cooldown s�resi takibi
+    private float dashCooldownTimer; 
 
     private Rigidbody rb;
     private Vector3 moveDirection;
@@ -22,12 +26,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // Hareket y�n�n� al
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
-        moveDirection = new Vector3(moveHorizontal, 0.0f, moveVertical).normalized;
-
-        // Dash i�lemi ba�lat
+           
         if (Input.GetKeyDown(KeyCode.Space) && dashCooldownTimer <= 0)
         {
             isDashing = true;
@@ -35,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
             dashCooldownTimer = dashCooldown;
         }
 
-        // Cooldown timer'� g�ncelle
+ 
         if (dashCooldownTimer > 0)
         {
             dashCooldownTimer -= Time.deltaTime;
@@ -43,6 +42,21 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void FixedUpdate()
+    {
+        Move();
+        Dash();
+
+
+    }
+
+    private void Move()
+    {
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
+        moveDirection = new Vector3(moveHorizontal, 0.0f, moveVertical).normalized;
+    }
+
+    private void Dash()
     {
         if (isDashing)
         {
