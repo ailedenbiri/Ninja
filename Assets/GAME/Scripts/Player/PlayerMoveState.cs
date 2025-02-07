@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerMoveState : PlayerState
 {
@@ -23,10 +23,25 @@ public class PlayerMoveState : PlayerState
 
     public override void FixedUpdate()
     {
-        Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
-        rb.linearVelocity = moveDirection * moveSpeed;
-        if (moveDirection.magnitude > 0.1f)
-            rb.rotation = Quaternion.Slerp(rb.rotation, Quaternion.LookRotation(moveDirection), Time.fixedDeltaTime * 10f);
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
+
+        Vector3 moveDirection = new Vector3(moveHorizontal, 0f, moveVertical).normalized;
+
+        if (moveDirection.magnitude > 0)
+        {
+            // 🎯 Karakterin yönünü hareket yönüne çevir
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, Time.fixedDeltaTime * 10f));
+
+            // 🎯 Hareket ettir
+            Vector3 newPosition = rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime;
+            rb.MovePosition(newPosition);
+        }
+        else
+        {
+            stateMachine.ChangeState(new PlayerIdleState(stateMachine, rb, animator));
+        }
     }
 
     public override void Exit() { }
